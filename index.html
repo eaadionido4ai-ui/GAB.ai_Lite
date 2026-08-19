@@ -1,0 +1,1553 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="engaging">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GAB.ai Lite Mockup</title>
+<style>
+  /* ---------- Shared tokens ---------- */
+  :root{
+    --brand-petrol:#0E5866;
+    --brand-amber:#F2A007;
+    --role-ic:#0E7C8C;
+    --role-safety:#F2A007;
+    --role-evac:#2FA36B;
+    --role-sar:#EE6C2B;
+    --role-aid:#D64550;
+    --role-pio:#5C6BC0;
+    --role-log:#8A5A2B;
+    --role-liaison:#8E44AD;
+    --role-planning:#34517A;
+    --role-finance:#B0417A;
+    --role-opschief:#1E6091;
+    --role-fire:#C62828;
+    --role-salvage:#546E7A;
+    --radius:4px;
+    --gap:16px;
+    --maxw:720px;
+    --font-display:"Barlow Condensed","Oswald","Arial Narrow",system-ui,sans-serif;
+    --font-body:"IBM Plex Sans",system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+    --font-mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+  }
+
+  /* ---------- Minimal skin ---------- */
+  html[data-theme="minimal"]{
+    --bg:#F2F4F4;
+    --surface:#FFFFFF;
+    --ink:#16211F;
+    --muted:#5C6B6A;
+    --line:#D8DEDE;
+    --accent:var(--brand-petrol);
+    --on-accent:#FFFFFF;
+    --topbar:#FFFFFF;
+    --topbar-ink:#16211F;
+    --shadow:0 1px 0 var(--line);
+    --card-shadow:0 1px 2px rgba(20,33,31,.08);
+  }
+  /* ---------- Engaging skin ---------- */
+  html[data-theme="engaging"]{
+    --bg:#0C333C;
+    --surface:#103F4A;
+    --ink:#EAF2F1;
+    --muted:#8FA9AC;
+    --line:#1D5561;
+    --accent:var(--brand-amber);
+    --on-accent:#14201F;
+    --topbar:#0A2A31;
+    --topbar-ink:#EAF2F1;
+    --shadow:0 1px 0 rgba(0,0,0,.25);
+    --card-shadow:0 6px 18px rgba(0,0,0,.28);
+  }
+
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{
+    background:var(--bg);
+    color:var(--ink);
+    font-family:var(--font-body);
+    font-size:16px;
+    line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+    min-height:100vh;
+  }
+
+  /* ---------- Top bar ---------- */
+  .topbar{
+    position:sticky;top:0;z-index:20;
+    background:var(--topbar);color:var(--topbar-ink);
+    border-bottom:1px solid var(--line);
+    box-shadow:var(--shadow);
+  }
+  .topbar-inner{
+    max-width:var(--maxw);margin:0 auto;
+    display:flex;align-items:center;gap:12px;
+    padding:10px 16px;
+  }
+  .wordmark{display:flex;align-items:baseline;gap:8px;cursor:pointer;user-select:none}
+  .wordmark b{
+    font-family:var(--font-display);
+    font-weight:700;letter-spacing:.14em;text-transform:uppercase;
+    font-size:24px;line-height:1;color:var(--accent);
+  }
+  html[data-theme="minimal"] .wordmark b{color:var(--brand-petrol)}
+  .wordmark span{font-family:var(--font-mono);font-size:11px;color:var(--muted);letter-spacing:.02em}
+  .spacer{flex:1}
+  .nav{display:flex;gap:4px}
+  .nav button{
+    font-family:var(--font-mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;
+    background:transparent;color:var(--muted);border:1px solid transparent;
+    padding:6px 9px;border-radius:var(--radius);cursor:pointer;
+  }
+  .nav button[aria-current="true"]{color:var(--ink);border-color:var(--line)}
+  .nav button:hover{color:var(--ink)}
+  .theme-toggle{
+    display:flex;align-items:center;gap:8px;
+    background:transparent;border:1px solid var(--line);color:var(--topbar-ink);
+    border-radius:999px;padding:5px 10px 5px 8px;cursor:pointer;
+    font-family:var(--font-mono);font-size:11px;letter-spacing:.05em;text-transform:uppercase;
+  }
+  .theme-dot{width:12px;height:12px;border-radius:50%;background:var(--accent);border:2px solid var(--surface)}
+
+  /* ---------- Hazard bar (engaging only) ---------- */
+  .hazard{height:8px;display:none}
+  html[data-theme="engaging"] .hazard{
+    display:block;
+    background:repeating-linear-gradient(-45deg,var(--brand-amber) 0 14px,#14201F 14px 28px);
+  }
+
+  /* ---------- Layout ---------- */
+  main{max-width:var(--maxw);margin:0 auto;padding:20px 16px 64px}
+  .eyebrow{
+    font-family:var(--font-mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--muted);margin:0 0 6px;
+  }
+  h1{
+    font-family:var(--font-display);font-weight:700;text-transform:uppercase;letter-spacing:.03em;
+    font-size:34px;line-height:1.02;margin:0 0 12px;
+  }
+  h2{
+    font-family:var(--font-display);font-weight:600;text-transform:uppercase;letter-spacing:.04em;
+    font-size:20px;margin:24px 0 10px;
+  }
+  p{margin:0 0 12px}
+  .lead{font-size:17px;color:var(--ink)}
+  .muted{color:var(--muted)}
+  a{color:var(--accent)}
+
+  .card{
+    background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);
+    padding:16px;box-shadow:var(--card-shadow);margin:0 0 14px;
+  }
+
+  /* ---------- Buttons ---------- */
+  .btn{
+    font-family:var(--font-display);font-weight:600;text-transform:uppercase;letter-spacing:.06em;
+    font-size:16px;background:var(--accent);color:var(--on-accent);
+    border:none;border-radius:var(--radius);padding:13px 20px;cursor:pointer;
+    display:inline-flex;align-items:center;gap:10px;
+  }
+  .btn:hover{filter:brightness(1.06)}
+  .btn.secondary{background:transparent;color:var(--ink);border:1px solid var(--line)}
+  .btn.block{width:100%;justify-content:center}
+  .btn:focus-visible,.nav button:focus-visible,.theme-toggle:focus-visible,
+  .role-card:focus-visible,.task:focus-visible,.field input:focus-visible,
+  .rm:focus-visible,.editlink:focus-visible{
+    outline:3px solid var(--brand-amber);outline-offset:2px;
+  }
+  html[data-theme="engaging"] .btn:focus-visible{outline-color:#EAF2F1}
+
+  /* ---------- Fields ---------- */
+  .field{margin:0 0 12px}
+  .field label{display:block;font-family:var(--font-mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:0 0 5px}
+  .field input{
+    width:100%;font-family:var(--font-body);font-size:16px;
+    background:var(--bg);color:var(--ink);border:1px solid var(--line);
+    border-radius:var(--radius);padding:11px 12px;
+  }
+  html[data-theme="engaging"] .field input{background:#0A2A31}
+  .field select{width:100%;font-family:var(--font-body);font-size:16px;background:var(--bg);color:var(--ink);border:1px solid var(--line);border-radius:var(--radius);padding:11px 12px}
+  html[data-theme="engaging"] .field select{background:#0A2A31}
+  .field select:focus-visible{outline:3px solid var(--brand-amber);outline-offset:2px}
+  .loc-bar{display:flex;align-items:center;gap:8px;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:8px 10px;margin:0 0 14px;box-shadow:var(--card-shadow)}
+  .loc-ico{flex:0 0 auto;color:var(--accent);display:grid;place-items:center}
+  html[data-theme="minimal"] .loc-ico{color:var(--brand-petrol)}
+  .loc-ico svg{width:18px;height:18px}
+  .loc-input{flex:1 1 auto;min-width:0;font-family:var(--font-body);font-size:14px;padding:9px 10px;border:1px solid var(--line);border-radius:var(--radius);background:var(--bg);color:var(--ink)}
+  html[data-theme="engaging"] .loc-input{background:#0A2A31}
+  .loc-btn{flex:0 0 auto;padding:9px 12px;font-size:13px}
+
+  /* ---------- About meta rows ---------- */
+  .meta-row{display:flex;gap:10px;padding:10px 0;border-top:1px solid var(--line);font-size:14px}
+  .meta-row:first-child{border-top:none}
+  .meta-row .k{font-family:var(--font-mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);min-width:118px}
+  .pill{display:inline-block;font-family:var(--font-mono);font-size:10px;letter-spacing:.06em;text-transform:uppercase;padding:2px 8px;border-radius:999px;border:1px solid var(--line);color:var(--muted)}
+  .footnote{font-size:12.5px;color:var(--muted);border-top:1px dashed var(--line);padding-top:12px;margin-top:16px}
+
+  /* ---------- Role grid ---------- */
+  .role-grid{display:grid;grid-template-columns:1fr;gap:12px}
+  @media(min-width:560px){.role-grid{grid-template-columns:1fr 1fr}}
+  .role-card{
+    text-align:left;cursor:pointer;background:var(--surface);
+    border:1px solid var(--line);border-left:6px solid var(--rc,var(--accent));
+    border-radius:var(--radius);padding:14px 14px 14px 16px;box-shadow:var(--card-shadow);
+    display:flex;gap:12px;align-items:center;color:var(--ink);
+  }
+  html[data-theme="engaging"] .role-card{border-left-width:8px}
+  .role-card:hover{transform:translateY(-1px)}
+  .role-card.selected{box-shadow:0 0 0 2px var(--rc,var(--accent)), var(--card-shadow)}
+  .role-ico{
+    width:42px;height:42px;flex:0 0 42px;border-radius:var(--radius);
+    display:grid;place-items:center;background:var(--rc,var(--accent));color:#fff;
+  }
+  html[data-theme="minimal"] .role-ico{background:transparent;color:var(--rc);border:2px solid var(--rc)}
+  .role-ico svg{width:22px;height:22px}
+  .role-name{font-family:var(--font-display);font-weight:600;text-transform:uppercase;letter-spacing:.03em;font-size:18px;line-height:1.05}
+  .role-sub{font-size:12.5px;color:var(--muted)}
+
+  /* ---------- Guide header ---------- */
+  .rolebar{
+    display:flex;align-items:center;gap:12px;margin:0 0 14px;
+    background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);
+    padding:12px 14px;box-shadow:var(--card-shadow);
+    border-top:5px solid var(--rc,var(--accent));
+  }
+  .rolebar .role-name{font-size:20px}
+  .who{font-family:var(--font-mono);font-size:12px;color:var(--muted)}
+
+  .progress-wrap{margin:0 0 16px}
+  .progress-label{display:flex;justify-content:space-between;font-family:var(--font-mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin:0 0 6px}
+  .progress{height:10px;background:var(--line);border-radius:999px;overflow:hidden}
+  .progress i{display:block;height:100%;width:0;background:var(--rc,var(--accent));transition:width .25s ease}
+  html[data-theme="minimal"] .progress{height:6px}
+
+  /* ---------- Task list ---------- */
+  .task{
+    width:100%;text-align:left;cursor:pointer;color:var(--ink);
+    touch-action:manipulation;
+    display:flex;gap:12px;align-items:flex-start;
+    background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);
+    padding:12px 14px;margin:0 0 8px;
+  }
+  .task .box{
+    width:22px;height:22px;flex:0 0 22px;border-radius:4px;margin-top:1px;
+    border:2px solid var(--muted);display:grid;place-items:center;
+  }
+  .task[data-done="true"] .box{background:var(--rc,var(--accent));border-color:var(--rc,var(--accent))}
+  .task[data-done="true"] .box svg{opacity:1}
+  .task .box svg{width:14px;height:14px;opacity:0;color:#fff}
+  .task .txt{flex:1}
+  .task[data-done="true"] .txt{color:var(--muted);text-decoration:line-through}
+  .task .ts{display:block;font-family:var(--font-mono);font-size:11px;color:var(--rc,var(--accent));margin-top:3px}
+  .task[data-done="false"] .ts{display:none}
+
+  /* ---------- Edit mode ---------- */
+  .guide-tools{display:flex;justify-content:flex-end;margin:-4px 0 10px}
+  .editlink{
+    font-family:var(--font-mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;
+    background:transparent;border:1px solid var(--line);color:var(--ink);
+    padding:6px 11px;border-radius:var(--radius);cursor:pointer;
+  }
+  .editlink:hover{border-color:var(--accent);color:var(--accent)}
+  .task.editing{cursor:default;align-items:center}
+  .task.editing .txt{text-decoration:none;color:var(--ink)}
+  .rm{
+    flex:0 0 auto;width:32px;height:32px;border-radius:var(--radius);
+    background:transparent;border:1px solid var(--line);color:var(--muted);
+    display:grid;place-items:center;cursor:pointer;
+  }
+  .rm:hover{border-color:var(--role-aid);color:var(--role-aid)}
+  .rm svg{width:14px;height:14px}
+  .tag{
+    display:inline-block;font-family:var(--font-mono);font-size:9.5px;letter-spacing:.06em;text-transform:uppercase;
+    padding:1px 6px;border-radius:999px;border:1px solid var(--rc,var(--accent));color:var(--rc,var(--accent));
+    margin-left:6px;vertical-align:middle;
+  }
+
+  /* ---------- Role tools ---------- */
+  .tool-panel{background:var(--surface);border:1px solid var(--line);border-left:5px solid var(--rc,var(--accent));border-radius:var(--radius);padding:14px;margin:16px 0 4px;box-shadow:var(--card-shadow)}
+  .tool-head{display:flex;align-items:center;gap:10px;margin:0 0 4px}
+  .tool-title{font-family:var(--font-display);font-weight:600;text-transform:uppercase;letter-spacing:.04em;font-size:17px}
+  .tool-badge{margin-left:auto;font-family:var(--font-mono);font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:var(--rc,var(--accent));border:1px solid var(--line);border-radius:999px;padding:2px 9px}
+  .tool-hint{font-size:12.5px;color:var(--muted);margin:0 0 12px}
+  .tool-empty{color:var(--muted);font-family:var(--font-mono);font-size:12.5px;text-align:center;padding:14px;border:1px dashed var(--line);border-radius:var(--radius);margin:0 0 10px}
+  .tool-row{display:flex;flex-wrap:wrap;gap:8px;align-items:center;border:1px solid var(--line);border-radius:var(--radius);padding:10px;margin:0 0 8px;background:var(--bg)}
+  html[data-theme="engaging"] .tool-row{background:#0C333C}
+  .tool-row .ti{flex:1 1 130px;min-width:96px;font-family:var(--font-body);font-size:14px;padding:9px 10px;border:1px solid var(--line);border-radius:var(--radius);background:var(--surface);color:var(--ink)}
+  html[data-theme="engaging"] .tool-row .ti{background:#0A2A31}
+  .tool-row .ti.qty{flex:0 0 66px;min-width:0}
+  .tool-row .ti.item{flex:1 1 100%}
+  .tool-row select.ti.kind{flex:0 0 128px}
+  .tool-row select.ti.kind.wide{flex:1 1 200px}
+  .num-field{display:flex;flex-direction:column;gap:3px}
+  .num-field label{font-family:var(--font-mono);font-size:9px;letter-spacing:.05em;text-transform:uppercase;color:var(--muted)}
+  .tally-row .ti{flex:1 1 140px}
+  .tally-controls{display:flex;align-items:center;gap:8px;margin-left:auto}
+  .tbtn{width:38px;height:38px;border:1px solid var(--line);background:transparent;color:var(--ink);border-radius:var(--radius);font-size:20px;line-height:1;cursor:pointer;display:grid;place-items:center}
+  .tbtn:hover{border-color:var(--rc,var(--accent));color:var(--rc,var(--accent))}
+  .tcount{font-family:var(--font-mono);font-size:20px;min-width:46px;text-align:center}
+  .bar-chart{margin-top:10px;border-top:1px solid var(--line);padding-top:12px}
+  .bar-row{display:flex;align-items:center;gap:8px;margin:0 0 6px}
+  .bar-label{flex:0 0 100px;font-size:11.5px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .bar-track{flex:1 1 auto;height:14px;background:var(--line);border-radius:4px;overflow:hidden}
+  .bar-fill{display:block;height:100%;border-radius:4px;min-width:2px;transition:width .2s ease}
+  .bar-val{flex:0 0 auto;font-family:var(--font-mono);font-size:12px;min-width:26px;text-align:right}
+  .tt-time{font-family:var(--font-mono);font-size:13px;color:var(--rc,var(--accent));flex:0 0 auto;padding:0 2px}
+  .ref-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:0 0 10px}
+  .ref-cat{border:1px solid var(--line);border-left:4px solid var(--c,var(--accent));border-radius:var(--radius);padding:8px 10px}
+  .ref-cat b{display:block;font-family:var(--font-display);text-transform:uppercase;letter-spacing:.03em}
+  .ref-cat span{font-size:12px;color:var(--muted)}
+  .ref-line{font-size:13.5px;margin:0 0 8px}
+  .caution{font-size:12px;color:var(--muted);border-top:1px dashed var(--line);padding-top:10px;margin-top:6px}
+  .tool-row .ti:focus-visible,.tbtn:focus-visible{outline:3px solid var(--brand-amber);outline-offset:2px}
+
+  /* ---------- Perceived rating ---------- */
+  .rate-note{border:1px dashed var(--line);border-left:4px solid var(--brand-amber);border-radius:var(--radius);padding:12px 14px;margin:0 0 12px;font-size:13px;color:var(--muted)}
+  .scale-legend{font-family:var(--font-mono);font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);margin:0 0 12px}
+  .rating-summary{font-size:14px}
+  .cluster-block{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:14px;margin:0 0 12px;box-shadow:var(--card-shadow)}
+  .cluster-h{display:flex;align-items:baseline;gap:10px;margin:0 0 4px}
+  .cluster-h b{font-family:var(--font-display);text-transform:uppercase;letter-spacing:.03em;font-size:16px}
+  .cluster-avg{margin-left:auto;font-family:var(--font-mono);font-size:11px;color:var(--muted)}
+  .dim-row{padding:11px 0;border-top:1px solid var(--line)}
+  .dim-row:first-child{border-top:none}
+  .dim-label{font-size:14px;margin:0 0 8px}
+  .scale{display:flex;gap:6px;flex-wrap:wrap}
+  .scale-btn{width:42px;height:42px;border:1px solid var(--line);background:transparent;color:var(--ink);border-radius:var(--radius);font-family:var(--font-mono);font-size:15px;cursor:pointer}
+  .scale-btn:hover{border-color:var(--accent)}
+  .scale-btn.on{background:var(--accent);color:var(--on-accent);border-color:var(--accent)}
+  html[data-theme="minimal"] .scale-btn.on{background:var(--brand-petrol);color:#fff;border-color:var(--brand-petrol)}
+  textarea.comment{width:100%;min-height:80px;font-family:var(--font-body);font-size:15px;background:var(--bg);color:var(--ink);border:1px solid var(--line);border-radius:var(--radius);padding:11px 12px;resize:vertical}
+  html[data-theme="engaging"] textarea.comment{background:#0A2A31}
+  .scale-btn:focus-visible{outline:3px solid var(--brand-amber);outline-offset:2px}
+
+  /* ---------- Log ---------- */
+  .logrow{
+    display:flex;gap:10px;padding:11px 0;border-top:1px solid var(--line);font-size:14px;
+  }
+  .logrow:first-child{border-top:none}
+  .logrow .time{font-family:var(--font-mono);font-size:11px;color:var(--muted);min-width:66px;padding-top:2px}
+  .logrow .dot{width:9px;height:9px;border-radius:50%;margin-top:6px;flex:0 0 9px;background:var(--rc,var(--accent))}
+  .logrow .body b{display:block;font-weight:600}
+  .logrow .body small{color:var(--muted);font-style:italic}
+  .empty{color:var(--muted);font-family:var(--font-mono);font-size:13px;padding:18px 0;text-align:center;border:1px dashed var(--line);border-radius:var(--radius)}
+
+  .summary{display:flex;gap:10px;flex-wrap:wrap;margin:0 0 14px}
+  .stat{flex:1;min-width:120px;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:12px 14px;box-shadow:var(--card-shadow)}
+  .stat .n{font-family:var(--font-display);font-weight:700;font-size:30px;line-height:1;color:var(--accent)}
+  html[data-theme="minimal"] .stat .n{color:var(--brand-petrol)}
+  .stat .l{font-family:var(--font-mono);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-top:4px}
+
+  .row-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:8px}
+
+  /* ---------- Modal ---------- */
+  .modal-bg{position:fixed;inset:0;background:rgba(6,20,24,.6);display:none;place-items:center;z-index:40;padding:16px}
+  .modal-bg[data-open="true"]{display:grid}
+  .modal{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);max-width:520px;width:100%;padding:18px;box-shadow:0 20px 60px rgba(0,0,0,.35)}
+  .modal pre{font-family:var(--font-mono);font-size:12px;white-space:pre-wrap;background:var(--bg);border:1px solid var(--line);border-radius:var(--radius);padding:12px;max-height:44vh;overflow:auto;color:var(--ink)}
+  html[data-theme="engaging"] .modal pre{background:#0A2A31}
+  #copy-note{display:block;text-align:center;margin-top:10px;font-family:var(--font-mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--role-evac);opacity:0;transition:opacity .2s ease}
+
+  .disclose{font-family:var(--font-mono);font-size:11px;color:var(--muted);text-align:center;margin-top:26px}
+
+  @media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="wordmark" data-action="home" role="button" tabindex="0" aria-label="Go to home">
+        <b>GAB.ai</b><span>Lite</span>
+      </div>
+      <div class="spacer"></div>
+      <nav class="nav" aria-label="Sections">
+        <button data-action="home" data-screen="about">Home</button>
+        <button data-action="go-roles" data-screen="roles">Roles</button>
+        <button data-action="go-log" data-screen="log">Log</button>
+      </nav>
+      <button class="theme-toggle" data-action="theme" aria-label="Switch design">
+        <span class="theme-dot"></span><span class="theme-label">Engaging</span>
+      </button>
+    </div>
+    <div class="hazard" aria-hidden="true"></div>
+  </header>
+
+  <main id="view"><!-- rendered by JS --></main>
+
+  <div class="modal-bg" id="modal" data-open="false" role="dialog" aria-modal="true" aria-label="Task log report">
+    <div class="modal">
+      <h2 style="margin-top:0">Task log report</h2>
+      <p class="muted" style="font-size:13px">A time ordered record of this member's actions across the roles they held. In the working app this exports to a file or feeds an ICS activity log.</p>
+      <pre id="modal-body"></pre>
+      <div class="row-actions">
+        <button class="btn" data-action="copy-report">Copy</button>
+        <button class="btn secondary" data-action="download-report">Download .txt</button>
+        <button class="btn secondary" data-action="close-modal">Close</button>
+      </div>
+      <span id="copy-note">Copied to clipboard</span>
+    </div>
+  </div>
+
+<script>
+(function(){
+  "use strict";
+
+  /* ---------------- Role and task templates ---------------- */
+  var ROLES = [
+    {key:"ic", name:"Incident Commander", sub:"Command and overall direction", color:"var(--role-ic)", ico:"star"},
+    {key:"safety", name:"Safety Officer", sub:"Hazards, safety message, stop authority", color:"var(--role-safety)", ico:"shield"},
+    {key:"opschief", name:"Operations Section Chief", sub:"Direct all tactical operations", color:"var(--role-opschief)", ico:"flag"},
+    {key:"evac", name:"Operations, Evacuation", sub:"Move people to safety, account for them", color:"var(--role-evac)", ico:"exit"},
+    {key:"sar", name:"Operations, Search and Rescue", sub:"Search, mark, extricate", color:"var(--role-sar)", ico:"search"},
+    {key:"aid", name:"Operations, First Aid", sub:"Triage and treat casualties", color:"var(--role-aid)", ico:"cross"},
+    {key:"fire", name:"Operations, Fire Fighting", sub:"Suppress and contain fire", color:"var(--role-fire)", ico:"flame"},
+    {key:"salvage", name:"Operations, Salvage", sub:"Protect and recover property", color:"var(--role-salvage)", ico:"wrench"},
+    {key:"pio", name:"Public Information Officer", sub:"Log reports at the ICP, brief the public", color:"var(--role-pio)", ico:"report"},
+    {key:"log", name:"Logistics Section", sub:"Supplies, equipment, and manpower", color:"var(--role-log)", ico:"box"},
+    {key:"liaison", name:"Liaison Officer", sub:"Coordinate with agencies and partners", color:"var(--role-liaison)", ico:"phone"},
+    {key:"planning", name:"Planning Section", sub:"Situation, resources, and the IAP", color:"var(--role-planning)", ico:"chart"},
+    {key:"finance", name:"Finance and Administration", sub:"Time, cost, and claims", color:"var(--role-finance)", ico:"coins"}
+  ];
+
+  var TASKS = {
+    ic:[
+      "Assume command and announce it on the net",
+      "Establish the Incident Command Post",
+      "Size up the situation and confirm the scope",
+      "Set incident objectives and priorities",
+      "Activate the ICS sections the incident needs",
+      "Brief the Safety Officer and confirm the safety message",
+      "Approve the Incident Action Plan",
+      "Authorize resource requests and mutual aid",
+      "Coordinate with cooperating and assisting agencies",
+      "Order demobilization once the incident stabilizes"
+    ],
+    safety:[
+      "Conduct a scene safety assessment",
+      "Identify hazards and mark exclusion zones",
+      "Confirm PPE for all responders on scene",
+      "Draft the safety message for this operational period",
+      "Set up responder rehab and hydration",
+      "Monitor fatigue and rotate crews as needed",
+      "Halt any operation that becomes unsafe",
+      "Record near misses and incidents for review"
+    ],
+    opschief:[
+      "Take direction from the Incident Commander on objectives",
+      "Develop the tactical plan for this operational period",
+      "Organize the operations teams and assignments",
+      "Assign resources to the divisions and teams",
+      "Supervise execution of the tactical plan",
+      "Track the status of all operations resources",
+      "Report progress and needs to the Incident Commander",
+      "Adjust tactics as the situation changes"
+    ],
+    evac:[
+      "Confirm the evacuation order and affected zones",
+      "Identify safe routes and assembly points",
+      "Guide residents toward the evacuation area",
+      "Prioritize assistance for vulnerable persons",
+      "Coordinate a headcount at the assembly point",
+      "Keep routes clear with traffic and crowd control",
+      "Report evacuation status to Operations"
+    ],
+    sar:[
+      "Receive the search assignment and boundaries",
+      "Size up structures before entry",
+      "Conduct a systematic search of the assigned area",
+      "Mark searched structures with the agreed markings",
+      "Perform extrication within your competency",
+      "Triage rescued persons and hand off to First Aid",
+      "Report cleared areas and any persons found"
+    ],
+    aid:[
+      "Set up the casualty collection point",
+      "Triage casualties using START or JumpSTART",
+      "Provide first aid within your scope of training",
+      "Tag and prioritize casualties for transport",
+      "Track casualty count and disposition",
+      "Coordinate handoffs with SAR and Evacuation",
+      "Monitor and report medical supply status"
+    ],
+    fire:[
+      "Size up the fire and confirm the type",
+      "Establish water supply and hose lines",
+      "Isolate the area and cut ignition sources",
+      "Attack the fire within your training and PPE",
+      "Protect exposures and nearby structures",
+      "Coordinate with evacuation and safety",
+      "Perform overhaul once the fire is out",
+      "Report fire status to Operations"
+    ],
+    salvage:[
+      "Assess property at risk after the main hazard",
+      "Protect undamaged property from further loss",
+      "Cover openings and remove water or debris",
+      "Recover and secure valuable or hazardous items",
+      "Support overhaul with the fire team",
+      "Document salvage actions and property handled",
+      "Report salvage status to Operations"
+    ],
+    pio:[
+      "Set up the information desk at the Incident Command Post",
+      "Log each report received with its time and source",
+      "Verify report details before any release",
+      "Consolidate reports into a situation summary for the IC",
+      "Draft public advisories cleared by the Incident Commander",
+      "Brief the media and the public at set intervals",
+      "Monitor rumors and correct misinformation",
+      "Maintain the master log of reports for the operational period"
+    ],
+    log:[
+      "Establish the staging area and supply point",
+      "Take stock of available supplies and equipment",
+      "Account for responder manpower on hand",
+      "Fill resource requests from the sections",
+      "Track issued and returned equipment",
+      "Arrange transport and fuel as needed",
+      "Anticipate shortfalls and reorder early",
+      "Hand over the inventory at the end of the operational period"
+    ],
+    liaison:[
+      "Identify the agencies and partners involved",
+      "Establish a contact point for each agency",
+      "Maintain the directory of agency hotlines",
+      "Relay agency capabilities and limits to the IC",
+      "Coordinate requests that cross agency lines",
+      "Keep partners updated on the incident status",
+      "Log agency commitments and resources offered"
+    ],
+    planning:[
+      "Collect and display the current situation status",
+      "Track the status and location of all resources",
+      "Prepare the Incident Action Plan for the next period",
+      "Run the planning meeting with command and general staff",
+      "Document decisions and post the incident map",
+      "Anticipate needs for the next operational period",
+      "Prepare demobilization planning"
+    ],
+    finance:[
+      "Set up cost tracking for the incident",
+      "Record responder time and attendance",
+      "Process procurement and supply purchases",
+      "Track equipment and rental costs",
+      "Handle compensation and claims from injuries or damage",
+      "Keep documentation for reimbursement and audit",
+      "Provide cost summaries to the Incident Commander"
+    ]
+  };
+
+  var ICONS = {
+    star:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.9 6.3 6.9.8-5.1 4.7 1.4 6.8L12 17.8 5.9 21.4l1.4-6.8L2.2 9.9l6.9-.8z"/></svg>',
+    shield:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l8 3v6c0 5-3.5 8.5-8 11-4.5-2.5-8-6-8-11V5z"/></svg>',
+    exit:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 3H5v18h8"/><path d="M16 8l4 4-4 4"/><path d="M20 12H10"/></svg>',
+    search:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>',
+    cross:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M9 3h6v6h6v6h-6v6H9v-6H3V9h6z"/></svg>',
+    check:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-11"/></svg>',
+    x:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>',
+    report:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="3" width="12" height="18" rx="2"/><path d="M9 8h6M9 12h6M9 16h4"/></svg>',
+    box:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7l9-4 9 4-9 4z"/><path d="M3 7v10l9 4 9-4V7"/><path d="M12 11v10"/></svg>',
+    phone:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3h4l2 5-3 2a12 12 0 0 0 5 5l2-3 5 2v4a2 2 0 0 1-2 2A17 17 0 0 1 3 5a2 2 0 0 1 2-2z"/></svg>',
+    chart:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>',
+    coins:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="6" rx="8" ry="3"/><path d="M4 6v6c0 1.7 3.6 3 8 3s8-1.3 8-3V6"/><path d="M4 12v6c0 1.7 3.6 3 8 3s8-1.3 8-3v-6"/></svg>',
+    pin:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-6-7-11a7 7 0 0 1 14 0c0 5-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>',
+    flag:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 21V4M5 4h11l-2 4 2 4H5"/></svg>',
+    flame:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2c1.6 3.2 4 4.6 4 8.5a4 4 0 0 1-8 0c0-1.6.6-2.6 1.3-3.4C9.5 8.7 10 7.2 12 2z"/></svg>',
+    wrench:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L4 17l3 3 5.3-5.3a4 4 0 0 0 5.4-5.4l-2.6 2.6-2-2z"/></svg>'
+  };
+
+  /* ---------------- State ---------------- */
+  var state = {
+    theme:"engaging",
+    screen:"about",
+    editing:false,
+    modalOpen:false,
+    responder:"",
+    cu:"",
+    unit:"",
+    incident:"",
+    incidentOther:"",
+    location:"",
+    role:null,
+    tasks:{},   // roleKey -> [{id,text,done,ts}]
+    log:[]      // {ts,roleKey,text,note,type}
+  };
+  function seedTasksFor(key){
+    return TASKS[key].map(function(t,i){
+      return {id:key+"-"+i, text:t, done:false, ts:null, custom:false};
+    });
+  }
+  ROLES.forEach(function(r){ state.tasks[r.key] = seedTasksFor(r.key); });
+  var customSeq = 0;
+  var toolSeq = 100;
+  state.tools = {
+    tally:[{id:"ty1", label:"Evacuees", count:0}],
+    demographics:[
+      {id:"dm1", label:"Male", count:0},
+      {id:"dm2", label:"Female", count:0},
+      {id:"dm3", label:"Children (0 to 12)", count:0},
+      {id:"dm4", label:"Adults (13 to 59)", count:0},
+      {id:"dm5", label:"Senior Citizens (60+)", count:0},
+      {id:"dm6", label:"Persons with Disability", count:0},
+      {id:"dm7", label:"Pregnant", count:0},
+      {id:"dm8", label:"Lactating", count:0}
+    ],
+    timetable:[],
+    inventory:[
+      {id:"iv1", item:"Bottled water", kind:"Supply", qty:"120", deployed:"40", checkedIn:"0", note:"boxes"},
+      {id:"iv2", item:"Ready to eat meals", kind:"Supply", qty:"80", deployed:"30", checkedIn:"0", note:"packs"},
+      {id:"iv3", item:"Responders on shift", kind:"Manpower", qty:"14", deployed:"10", checkedIn:"14", note:""},
+      {id:"iv4", item:"Handheld radios", kind:"Supply", qty:"10", deployed:"6", checkedIn:"8", note:"2 low battery"}
+    ],
+    casualty:[],
+    sarlog:[],
+    hotlines:[
+      {id:"hl1", agency:"NDRRMC Operations Center", number:"", note:"add local number"},
+      {id:"hl2", agency:"Local DRRMO", number:"", note:""},
+      {id:"hl3", agency:"Bureau of Fire Protection", number:"", note:""},
+      {id:"hl4", agency:"Philippine Red Cross", number:"", note:""},
+      {id:"hl5", agency:"Nearest hospital", number:"", note:""}
+    ]
+  };
+  state.rating = {
+    scaleMax:5,
+    clusters:[
+      {id:"c1", name:"Cluster 1 (placeholder)", dimensions:[
+        {id:"d1", label:"Dimension 1 (placeholder)", value:0},
+        {id:"d2", label:"Dimension 2 (placeholder)", value:0}
+      ]},
+      {id:"c2", name:"Cluster 2 (placeholder)", dimensions:[
+        {id:"d3", label:"Dimension 3 (placeholder)", value:0},
+        {id:"d4", label:"Dimension 4 (placeholder)", value:0}
+      ]}
+    ],
+    comment:""
+  };
+  state.about = {
+    acronym:"Guided Assistance and Bridging for AI-supported Incident management",
+    headline:"Know your role. Act. Keep the record.",
+    lead:"GAB.ai Lite is a lightweight, offline first field companion for members of an Incident Management Team. It is the on-device, single-role version of GAB.ai (Gabay), the agentic incident assistant. When an emergency starts, you pick your role, walk through the first actions that role is expected to take under the Incident Command System, and log what you did and when.",
+    sub:"The aim is simple. Less time wondering what your role requires, more time acting on it, with a clean handover at the end of your shift.",
+    developer:"Edward Andrew A. Dionido, with AI assistance",
+    institution:"UP Resilience Institute, Resilient Campus Program",
+    framework:"Incident Command System, aligned with RA 10121",
+    footnote:"GAB.ai Lite is the offline, single-device field companion to GAB.ai (Gabay): Guided Assistance and Bridging for AI-supported Incident management. Gabay is Filipino for guide."
+  };
+  state.aboutEditing = false;
+  state.aboutDraft = {};
+  window.state = state; // exposed for tests
+
+  /* ---------------- Helpers ---------------- */
+  function roleByKey(k){ for(var i=0;i<ROLES.length;i++){ if(ROLES[i].key===k) return ROLES[i]; } return null; }
+  function esc(s){ return String(s).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;"}[c];}); }
+  function nowClock(){
+    var d=new Date();
+    function p(n){return (n<10?"0":"")+n;}
+    return p(d.getHours())+":"+p(d.getMinutes());
+  }
+  function currentTasks(){ return state.role ? state.tasks[state.role] : []; }
+
+  /* ---------------- Screen: About ---------------- */
+  function saveAbout(){
+    try{ if(window.localStorage){ localStorage.setItem("gabai_lite_about", JSON.stringify(state.about)); } }catch(e){ /* storage may be blocked */ }
+  }
+  function loadAbout(){
+    try{
+      if(!window.localStorage) return;
+      var raw = localStorage.getItem("gabai_lite_about");
+      if(raw){ var o=JSON.parse(raw); Object.keys(o).forEach(function(k){ if(k in state.about){ state.about[k]=o[k]; } }); }
+    }catch(e){ /* storage may be blocked */ }
+  }
+  function aboutFieldText(label,key){
+    return '<div class="field"><label>'+esc(label)+'</label>'+
+      '<input data-about-field="'+key+'" value="'+esc(state.aboutDraft[key])+'"></div>';
+  }
+  function aboutFieldArea(label,key){
+    return '<div class="field"><label>'+esc(label)+'</label>'+
+      '<textarea class="comment" data-about-field="'+key+'">'+esc(state.aboutDraft[key])+'</textarea></div>';
+  }
+
+  function viewAbout(){
+    var a = state.about;
+    if(state.aboutEditing){
+      return ''+
+      '<div class="guide-tools"><button class="editlink" data-action="about-cancel">Cancel</button></div>'+
+      '<p class="eyebrow">Home content</p>'+
+      '<h1>Edit the homepage</h1>'+
+      '<p class="muted">Change any text below and tap Save. In the deployed app these edits are remembered on this device.</p>'+
+      '<div class="card">'+
+        aboutFieldText("Acronym line","acronym")+
+        aboutFieldText("Headline","headline")+
+        aboutFieldArea("Lead paragraph","lead")+
+        aboutFieldArea("Second paragraph","sub")+
+        aboutFieldText("Lead developer","developer")+
+        aboutFieldText("Institution","institution")+
+        aboutFieldText("Framework","framework")+
+        aboutFieldArea("Footnote","footnote")+
+      '</div>'+
+      '<div class="row-actions">'+
+        '<button class="btn" data-action="about-save">Save</button>'+
+        '<button class="btn secondary" data-action="about-cancel">Cancel</button>'+
+      '</div>';
+    }
+    return ''+
+    '<div class="guide-tools"><button class="editlink" data-action="about-edit">Edit content</button></div>'+
+    '<p class="eyebrow">'+esc(a.acronym)+'</p>'+
+    '<h1>'+esc(a.headline)+'</h1>'+
+    '<p class="lead">'+esc(a.lead)+'</p>'+
+    '<p class="muted">'+esc(a.sub)+'</p>'+
+    '<div class="card">'+
+      '<div class="meta-row"><span class="k">Lead developer</span><span>'+esc(a.developer)+'</span></div>'+
+      '<div class="meta-row"><span class="k">Institution</span><span>'+esc(a.institution)+'</span></div>'+
+      '<div class="meta-row"><span class="k">Framework</span><span>'+esc(a.framework)+'</span></div>'+
+      '<div class="meta-row"><span class="k">User manual</span><span><span class="pill">Coming soon</span></span></div>'+
+      '<div class="meta-row"><span class="k">Walkthrough</span><span><span class="pill">Coming soon</span></span></div>'+
+    '</div>'+
+    '<button class="btn block" data-action="enter">Enter GAB.ai Lite</button>'+
+    '<p class="footnote">'+esc(a.footnote)+'</p>';
+  }
+
+  /* ---------------- Screen: Roles ---------------- */
+  var UP_CUS = ["UP Diliman","UP Los Baños","UP Manila","UP Visayas","UP Tacloban","UP Mindanao","UP Baguio","UP Cebu","UP Open University","UP System"];
+  var INCIDENTS = ["NSED 1st Quarter","NSED 2nd Quarter","NSED 3rd Quarter","NSED 4th Quarter","Others"];
+
+  function selBuild(current, items, placeholder){
+    var html = "";
+    if(placeholder!=null){ html += '<option value=""'+((current===""||current==null)?" selected":"")+'>'+esc(placeholder)+'</option>'; }
+    items.forEach(function(it){
+      html += '<option value="'+esc(it.value)+'"'+(current===it.value?" selected":"")+'>'+esc(it.label)+'</option>';
+    });
+    return html;
+  }
+
+  function viewRoles(){
+    var cards = ROLES.map(function(r){
+      return ''+
+      '<button class="role-card'+(state.role===r.key?' selected':'')+'" data-action="pick-role" data-role="'+r.key+'" style="--rc:'+r.color+'">'+
+        '<span class="role-ico" style="--rc:'+r.color+'">'+ICONS[r.ico]+'</span>'+
+        '<span><span class="role-name">'+esc(r.name)+'</span>'+
+        '<span class="role-sub">'+esc(r.sub)+'</span></span>'+
+      '</button>';
+    }).join("");
+    var showUnit = !!state.cu;
+    var showOther = state.incident === "Others";
+    var cuItems = UP_CUS.map(function(cu){ return {value:cu, label:cu}; });
+    var incItems = INCIDENTS.map(function(i){ return {value:i, label:i}; });
+    var roleItems = ROLES.map(function(r){ return {value:r.key, label:r.name}; });
+    return ''+
+    '<p class="eyebrow">Step 1 of 2</p>'+
+    '<h1>Who is responding?</h1>'+
+    '<div class="card">'+
+      '<div class="field"><label for="f-name">Responder name</label>'+
+        '<input id="f-name" data-field="responder" placeholder="e.g. E. Dionido" value="'+esc(state.responder)+'"></div>'+
+      '<div class="field"><label for="f-cu">Constituent University</label>'+
+        '<select id="f-cu" data-form-select="cu">'+selBuild(state.cu, cuItems, "Select constituent university")+'</select></div>'+
+      (showUnit ?
+        '<div class="field"><label for="f-unit">College, Office, or Unit</label>'+
+          '<input id="f-unit" data-field="unit" placeholder="e.g. Resilience Institute" value="'+esc(state.unit)+'"></div>'
+        : '')+
+      '<div class="field"><label for="f-inc">Incident</label>'+
+        '<select id="f-inc" data-form-select="incident">'+selBuild(state.incident, incItems, "Select incident")+'</select></div>'+
+      (showOther ?
+        '<div class="field"><label for="f-inc-other">Incident name</label>'+
+          '<input id="f-inc-other" data-field="incidentOther" placeholder="Type the incident name" value="'+esc(state.incidentOther)+'"></div>'
+        : '')+
+      '<div class="field" style="margin-bottom:0"><label for="f-role">ICS role</label>'+
+        '<select id="f-role" data-form-select="role">'+selBuild(state.role||"", roleItems, "Select a role to begin")+'</select></div>'+
+    '</div>'+
+    (state.role ? '<button class="btn block" data-action="proceed-role" style="margin:0 0 18px">Proceed to role tasks</button>' : '')+
+    '<h2>Or pick your ICS role</h2>'+
+    '<div class="role-grid">'+cards+'</div>';
+  }
+
+  /* ---------------- Screen: Guide ---------------- */
+  function renderLocationBar(){
+    return '<div class="loc-bar">'+
+      '<span class="loc-ico">'+ICONS.pin+'</span>'+
+      '<input class="loc-input" data-field="location" value="'+esc(state.location)+'" placeholder="Current location (e.g. Bldg A, 2F)">'+
+      '<button class="btn secondary loc-btn" data-action="locate">GPS</button>'+
+    '</div>';
+  }
+
+  function viewGuide(){
+    var r = roleByKey(state.role);
+    if(!r){ return viewRoles(); }
+    var list = currentTasks();
+    var done = list.filter(function(t){return t.done;}).length;
+    var pct = list.length ? Math.round(done/list.length*100) : 0;
+    var incLabel = state.incident==="Others" ? (state.incidentOther||"Others") : state.incident;
+    var whoParts = [];
+    if(state.responder) whoParts.push(esc(state.responder));
+    if(state.cu) whoParts.push(esc(state.cu + (state.unit ? ", "+state.unit : "")));
+    if(incLabel) whoParts.push(esc(incLabel));
+    var who = whoParts.length ? whoParts.join(" &middot; ") : "Unassigned";
+    var editing = state.editing;
+
+    var rows;
+    if(list.length===0){
+      rows = '<div class="empty">No actions in this list. Add one below, or restore the default actions.</div>';
+    } else if(editing){
+      rows = list.map(function(t){
+        return ''+
+        '<div class="task editing" style="--rc:'+r.color+'">'+
+          '<span class="txt">'+esc(t.text)+(t.custom?' <span class="tag">Added</span>':'')+'</span>'+
+          '<button class="rm" data-action="remove-task" data-id="'+t.id+'" aria-label="Remove action">'+ICONS.x+'</button>'+
+        '</div>';
+      }).join("");
+    } else {
+      rows = list.map(function(t){
+        return ''+
+        '<button class="task" data-dblaction="toggle-task" data-id="'+t.id+'" data-done="'+t.done+'" style="--rc:'+r.color+'">'+
+          '<span class="box">'+ICONS.check+'</span>'+
+          '<span class="txt">'+esc(t.text)+(t.custom?' <span class="tag">Added</span>':'')+
+            '<span class="ts">Logged '+(t.ts||"")+'</span>'+
+          '</span>'+
+        '</button>';
+      }).join("");
+    }
+
+    var editControls = editing ? (
+      '<div class="card" style="margin-top:12px">'+
+        '<div class="field" style="margin-bottom:10px"><label for="f-newtask">Add an action to this role</label>'+
+          '<input id="f-newtask" placeholder="e.g. Confirm radio check with base"></div>'+
+        '<div class="row-actions">'+
+          '<button class="btn" data-action="add-task">Add action</button>'+
+          '<button class="btn secondary" data-action="restore-tasks">Restore default actions</button>'+
+        '</div>'+
+      '</div>'
+    ) : '';
+
+    var helpText = editing
+      ? '<p class="muted" style="font-size:13.5px">Edit mode. Remove an action with the cross, or add your own below. You can restore the default ICS actions any time.</p>'
+      : '<p class="muted" style="font-size:13.5px">Double tap an action when you have done it. It stamps the time and adds it to your log.</p>';
+
+    return ''+
+    '<div class="rolebar" style="--rc:'+r.color+'">'+
+      '<span class="role-ico" style="--rc:'+r.color+'">'+ICONS[r.ico]+'</span>'+
+      '<span><span class="role-name">'+esc(r.name)+'</span>'+
+      '<span class="who">'+who+'</span></span>'+
+    '</div>'+
+    '<div class="guide-tools">'+
+      '<button class="editlink" data-action="toggle-edit">'+(editing?'Done editing':'Edit list')+'</button>'+
+    '</div>'+
+    (editing ? '' : renderLocationBar())+
+    '<div class="progress-wrap">'+
+      '<div class="progress-label"><span>First actions logged</span><span>'+done+' of '+list.length+'</span></div>'+
+      '<div class="progress"><i style="width:'+pct+'%;--rc:'+r.color+'"></i></div>'+
+    '</div>'+
+    helpText+
+    rows+
+    editControls+
+    (editing ? '' : renderTool(state.role))+
+    '<div class="row-actions">'+
+      '<button class="btn" data-action="go-log">View activity log</button>'+
+      '<button class="btn secondary" data-action="go-roles">Switch role</button>'+
+    '</div>';
+  }
+
+  /* ---------------- Screen: Log ---------------- */
+  function viewLog(){
+    var total = state.log.length;
+    var taskCount = state.log.filter(function(e){return e.type==="task";}).length;
+    var manualCount = total - taskCount;
+    var rowsHtml;
+    if(total===0){
+      rowsHtml = '<div class="empty">No actions logged yet. Pick a role and start marking your first actions.</div>';
+    } else {
+      var ordered = state.log.slice().reverse();
+      rowsHtml = ordered.map(function(e){
+        var r = roleByKey(e.roleKey);
+        var color = r?r.color:"var(--accent)";
+        var label = r?r.name:"General";
+        return ''+
+        '<div class="logrow" style="--rc:'+color+'">'+
+          '<span class="time">'+esc(e.ts)+'</span>'+
+          '<span class="dot"></span>'+
+          '<span class="body"><b>'+esc(e.text)+'</b>'+
+            '<small>'+esc(label)+(e.location?" &middot; @ "+esc(e.location):"")+'</small></span>'+
+        '</div>';
+      }).join("");
+    }
+    return ''+
+    '<p class="eyebrow">Shift record</p>'+
+    '<h1>Activity log</h1>'+
+    '<div class="summary">'+
+      '<div class="stat"><div class="n">'+total+'</div><div class="l">Total entries</div></div>'+
+      '<div class="stat"><div class="n">'+taskCount+'</div><div class="l">Guided actions</div></div>'+
+      '<div class="stat"><div class="n">'+manualCount+'</div><div class="l">Manual notes</div></div>'+
+    '</div>'+
+    renderLocationBar()+
+    '<div class="card">'+
+      '<div class="field" style="margin-bottom:10px"><label for="f-manual">Log an action that is not on the checklist</label>'+
+        '<input id="f-manual" placeholder="e.g. Relocated ICP to the covered court"></div>'+
+      '<button class="btn" data-action="add-manual">Add to log</button>'+
+    '</div>'+
+    '<div class="card">'+rowsHtml+'</div>'+
+    '<div class="row-actions">'+
+      '<button class="btn" data-action="export">Generate report</button>'+
+      '<button class="btn secondary" data-action="go-rating">Perceived rating</button>'+
+      (state.role?'<button class="btn secondary" data-action="back-guide">Back to guide</button>':'<button class="btn secondary" data-action="go-roles">Pick a role</button>')+
+    '</div>'+
+    '<p class="disclose">Prototype for review. Records are held in memory only. The working app stores them on device and syncs when online.</p>';
+  }
+
+  /* ---------------- Role tools ---------------- */
+  var TOOL_FOR = {
+    evac:["tally","demographics"],
+    aid:["guide","casualty"],
+    sar:["sarlog"],
+    pio:["timetable"],
+    log:["inventory"],
+    liaison:["hotlines"],
+    planning:["plan-ph"],
+    finance:["fin-ph"]
+  };
+
+  function findToolRow(tool,id){
+    var a=state.tools[tool]; if(!a) return null;
+    for(var i=0;i<a.length;i++){ if(a[i].id===id) return a[i]; }
+    return null;
+  }
+  function removeToolRow(tool,id){
+    var a=state.tools[tool]; if(!a) return;
+    for(var i=0;i<a.length;i++){ if(a[i].id===id){ a.splice(i,1); break; } }
+  }
+  function tallyStep(id,delta){
+    var r=findToolRow("tally",id);
+    if(r){ r.count=Math.max(0,(r.count||0)+delta); }
+  }
+  function tallyAdd(){ toolSeq++; state.tools.tally.push({id:"ty"+toolSeq, label:"New counter", count:0}); }
+  function tallyReset(){ state.tools.tally.forEach(function(r){ r.count=0; }); }
+  function demStep(id,delta){ var r=findToolRow("demographics",id); if(r){ r.count=Math.max(0,(r.count||0)+delta); } }
+  function demAdd(){ toolSeq++; state.tools.demographics.push({id:"dm"+toolSeq, label:"New category", count:0}); }
+  function ttAdd(){ toolSeq++; state.tools.timetable.push({id:"tt"+toolSeq, time:nowClock(), source:"", info:""}); }
+  function invAdd(){ toolSeq++; state.tools.inventory.push({id:"iv"+toolSeq, item:"", kind:"Supply", qty:"", deployed:"", checkedIn:"", note:""}); }
+  function hotAdd(){ toolSeq++; state.tools.hotlines.push({id:"hl"+toolSeq, agency:"", number:"", note:""}); }
+  function casAdd(){ toolSeq++; state.tools.casualty.push({id:"cs"+toolSeq, ref:"", injury:"", tag:"Immediate", status:"In care"}); }
+  function sarAdd(){ toolSeq++; state.tools.sarlog.push({id:"sr"+toolSeq, time:nowClock(), type:"Check in to evacuation area", detail:""}); }
+  function opt(cur,val){ return '<option'+(cur===val?" selected":"")+'>'+esc(val)+'</option>'; }
+
+  function toolHead(title, rc, badge){
+    return '<div class="tool-head" style="--rc:'+rc+'"><span class="tool-title">'+esc(title)+'</span>'+
+      (badge!=null?'<span class="tool-badge">'+esc(String(badge))+'</span>':'')+'</div>';
+  }
+
+  function renderTally(rc){
+    var rows = state.tools.tally;
+    var total = rows.reduce(function(s,r){ return s+(parseInt(r.count,10)||0); },0);
+    var body = rows.map(function(r){
+      return '<div class="tool-row tally-row" style="--rc:'+rc+'">'+
+        '<input class="ti" data-tool="tally" data-tool-field="label" data-id="'+r.id+'" value="'+esc(r.label)+'" placeholder="Counter name">'+
+        '<div class="tally-controls">'+
+          '<button class="tbtn" data-action="tally-dec" data-id="'+r.id+'" aria-label="Decrease">-</button>'+
+          '<span class="tcount">'+r.count+'</span>'+
+          '<button class="tbtn" data-action="tally-inc" data-id="'+r.id+'" aria-label="Increase">+</button>'+
+          '<button class="rm" data-action="tally-remove" data-id="'+r.id+'" aria-label="Remove counter">'+ICONS.x+'</button>'+
+        '</div>'+
+      '</div>';
+    }).join("");
+    return '<div class="tool-panel" style="--rc:'+rc+'">'+
+      toolHead("Headcount tally", rc, "Total "+total)+
+      '<p class="tool-hint">Tap plus or minus as people are counted. Rename a counter, or add another for a second assembly point.</p>'+
+      body+
+      '<div class="row-actions">'+
+        '<button class="btn" data-action="tally-add">Add counter</button>'+
+        '<button class="btn secondary" data-action="tally-reset">Reset counts</button>'+
+      '</div>'+
+    '</div>';
+  }
+
+  function renderTimetable(rc){
+    var rows = state.tools.timetable;
+    var body;
+    if(rows.length===0){
+      body = '<div class="tool-empty">No entries yet. Tap Add entry when a report comes in.</div>';
+    } else {
+      body = rows.map(function(r){
+        return '<div class="tool-row" style="--rc:'+rc+'">'+
+          '<span class="tt-time">'+esc(r.time)+'</span>'+
+          '<input class="ti" data-tool="timetable" data-tool-field="source" data-id="'+r.id+'" value="'+esc(r.source)+'" placeholder="Source">'+
+          '<input class="ti" data-tool="timetable" data-tool-field="info" data-id="'+r.id+'" value="'+esc(r.info)+'" placeholder="Information received">'+
+          '<button class="rm" data-action="tt-remove" data-id="'+r.id+'" aria-label="Remove entry">'+ICONS.x+'</button>'+
+        '</div>';
+      }).join("");
+    }
+    return '<div class="tool-panel" style="--rc:'+rc+'">'+
+      toolHead("Incoming information log", rc, rows.length)+
+      '<p class="tool-hint">A running timetable for information received at the ICP. Each entry stamps the time it was added.</p>'+
+      body+
+      '<div class="row-actions"><button class="btn" data-action="tt-add">Add entry</button></div>'+
+    '</div>';
+  }
+
+  function renderInventory(rc){
+    var rows = state.tools.inventory;
+    var body = rows.map(function(r){
+      return '<div class="tool-row" style="--rc:'+rc+'">'+
+        '<input class="ti item" data-tool="inventory" data-tool-field="item" data-id="'+r.id+'" value="'+esc(r.item)+'" placeholder="Item or role">'+
+        '<select class="ti kind" data-tool="inventory" data-tool-field="kind" data-id="'+r.id+'">'+
+          opt(r.kind,"Supply")+opt(r.kind,"Manpower")+
+        '</select>'+
+        '<span class="num-field"><label>Total</label><input class="ti qty" data-tool="inventory" data-tool-field="qty" data-id="'+r.id+'" value="'+esc(r.qty)+'" placeholder="0" inputmode="numeric"></span>'+
+        '<span class="num-field"><label>Deployed</label><input class="ti qty" data-tool="inventory" data-tool-field="deployed" data-id="'+r.id+'" value="'+esc(r.deployed)+'" placeholder="0" inputmode="numeric"></span>'+
+        '<span class="num-field"><label>Checked in</label><input class="ti qty" data-tool="inventory" data-tool-field="checkedIn" data-id="'+r.id+'" value="'+esc(r.checkedIn)+'" placeholder="0" inputmode="numeric"></span>'+
+        '<input class="ti" data-tool="inventory" data-tool-field="note" data-id="'+r.id+'" value="'+esc(r.note)+'" placeholder="Notes">'+
+        '<button class="rm" data-action="inv-remove" data-id="'+r.id+'" aria-label="Remove item">'+ICONS.x+'</button>'+
+      '</div>';
+    }).join("");
+    return '<div class="tool-panel" style="--rc:'+rc+'">'+
+      toolHead("Supplies and manpower", rc, rows.length)+
+      '<p class="tool-hint">Track what is on hand, deployed to the field, and checked back in. Switch a row between supply and manpower.</p>'+
+      body+
+      '<div class="row-actions"><button class="btn" data-action="inv-add">Add row</button></div>'+
+    '</div>';
+  }
+
+  function renderHotlines(rc){
+    var rows = state.tools.hotlines;
+    var body = rows.map(function(r){
+      return '<div class="tool-row" style="--rc:'+rc+'">'+
+        '<input class="ti" data-tool="hotlines" data-tool-field="agency" data-id="'+r.id+'" value="'+esc(r.agency)+'" placeholder="Agency or contact">'+
+        '<input class="ti" data-tool="hotlines" data-tool-field="number" data-id="'+r.id+'" value="'+esc(r.number)+'" placeholder="Number" inputmode="tel">'+
+        '<input class="ti" data-tool="hotlines" data-tool-field="note" data-id="'+r.id+'" value="'+esc(r.note)+'" placeholder="Notes">'+
+        '<button class="rm" data-action="hot-remove" data-id="'+r.id+'" aria-label="Remove hotline">'+ICONS.x+'</button>'+
+      '</div>';
+    }).join("");
+    return '<div class="tool-panel" style="--rc:'+rc+'">'+
+      toolHead("Agency hotlines", rc, rows.length)+
+      '<p class="tool-hint">A directory you can edit on the spot. Fill in the numbers for your area, and add partners as they check in.</p>'+
+      body+
+      '<div class="row-actions"><button class="btn" data-action="hot-add">Add hotline</button></div>'+
+    '</div>';
+  }
+
+  function renderGuide(rc){
+    return '<div class="tool-panel" style="--rc:'+rc+'">'+
+      toolHead("Triage and first aid guide", rc, null)+
+      '<p class="tool-hint">Quick reference only. Follow your training and the START or JumpSTART protocol on scene.</p>'+
+      '<div class="ref-grid">'+
+        '<div class="ref-cat" style="--c:var(--role-aid)"><b>Immediate</b><span>Red. Life threat now. Treat first.</span></div>'+
+        '<div class="ref-cat" style="--c:var(--role-safety)"><b>Delayed</b><span>Yellow. Serious but can wait.</span></div>'+
+        '<div class="ref-cat" style="--c:var(--role-evac)"><b>Minor</b><span>Green. Walking wounded.</span></div>'+
+        '<div class="ref-cat" style="--c:var(--muted)"><b>Deceased</b><span>Black. No breathing after airway opened.</span></div>'+
+      '</div>'+
+      '<p class="ref-line"><b>START check:</b> Respirations, Perfusion, Mental status.</p>'+
+      '<p class="ref-line"><b>First aid basics:</b> control bleeding, open the airway, use the recovery position, keep the casualty warm.</p>'+
+      '<p class="caution">Prototype reference. This is decision support, not a substitute for a qualified assessor.</p>'+
+    '</div>';
+  }
+
+  function renderCasualty(rc){
+    var rows = state.tools.casualty;
+    var hosp = rows.filter(function(r){return r.status==="To hospital";}).length;
+    var dead = rows.filter(function(r){return r.status==="Deceased";}).length;
+    var incare = rows.length - hosp - dead;
+    var body;
+    if(rows.length===0){
+      body = '<div class="tool-empty">No casualties logged yet. Tap Add casualty as they arrive.</div>';
+    } else {
+      body = rows.map(function(r){
+        return '<div class="tool-row" style="--rc:'+rc+'">'+
+          '<input class="ti item" data-tool="casualty" data-tool-field="ref" data-id="'+r.id+'" value="'+esc(r.ref)+'" placeholder="Name or ID">'+
+          '<input class="ti" data-tool="casualty" data-tool-field="injury" data-id="'+r.id+'" value="'+esc(r.injury)+'" placeholder="Injury">'+
+          '<select class="ti kind" data-tool="casualty" data-tool-field="tag" data-id="'+r.id+'">'+
+            opt(r.tag,"Immediate")+opt(r.tag,"Delayed")+opt(r.tag,"Minor")+opt(r.tag,"Expectant")+
+          '</select>'+
+          '<select class="ti kind" data-tool="casualty" data-tool-field="status" data-id="'+r.id+'">'+
+            opt(r.status,"In care")+opt(r.status,"To hospital")+opt(r.status,"Deceased")+
+          '</select>'+
+          '<button class="rm" data-action="cas-remove" data-id="'+r.id+'" aria-label="Remove casualty">'+ICONS.x+'</button>'+
+        '</div>';
+      }).join("");
+    }
+    return '<div class="tool-panel" style="--rc:'+rc+'">'+
+      toolHead("Casualty tracker", rc, "In "+incare+" / Hospital "+hosp+" / Deceased "+dead)+
+      '<p class="tool-hint">Log each victim entered with the injury and triage tag. Set the status to move them to the hospital list or the deceased list.</p>'+
+      body+
+      '<div class="row-actions"><button class="btn" data-action="cas-add">Add casualty</button></div>'+
+    '</div>';
+  }
+
+  function renderSarLog(rc){
+    var rows = state.tools.sarlog;
+    var body;
+    if(rows.length===0){
+      body = '<div class="tool-empty">No entries yet. Log check ins, victims found, and arrivals as they happen.</div>';
+    } else {
+      body = rows.map(function(r){
+        return '<div class="tool-row" style="--rc:'+rc+'">'+
+          '<span class="tt-time">'+esc(r.time)+'</span>'+
+          '<select class="ti kind wide" data-tool="sarlog" data-tool-field="type" data-id="'+r.id+'">'+
+            opt(r.type,"Check in to evacuation area")+opt(r.type,"Victim found")+opt(r.type,"Victim arrival at evac or first aid")+
+          '</select>'+
+          '<input class="ti" data-tool="sarlog" data-tool-field="detail" data-id="'+r.id+'" value="'+esc(r.detail)+'" placeholder="Location or details">'+
+          '<button class="rm" data-action="sar-remove" data-id="'+r.id+'" aria-label="Remove entry">'+ICONS.x+'</button>'+
+        '</div>';
+      }).join("");
+    }
+    return '<div class="tool-panel" style="--rc:'+rc+'">'+
+      toolHead("Search and rescue log", rc, rows.length)+
+      '<p class="tool-hint">One running log for check ins to the evacuation area, victims found, and arrivals to the evacuation or first aid area.</p>'+
+      body+
+      '<div class="row-actions"><button class="btn" data-action="sar-add">Add entry</button></div>'+
+    '</div>';
+  }
+
+  function renderPlaceholderTool(rc, title, note){
+    return '<div class="tool-panel" style="--rc:'+rc+'">'+
+      toolHead(title, rc, "Placeholder")+
+      '<div class="tool-empty">'+esc(note)+'</div>'+
+    '</div>';
+  }
+
+  function renderDemographics(rc){
+    var rows = state.tools.demographics;
+    var total = rows.reduce(function(s,r){ return s+(parseInt(r.count,10)||0); },0);
+    var maxc = rows.reduce(function(m,r){ return Math.max(m, parseInt(r.count,10)||0); },0) || 1;
+    var editors = rows.map(function(r){
+      return '<div class="tool-row tally-row" style="--rc:'+rc+'">'+
+        '<input class="ti" data-tool="demographics" data-tool-field="label" data-id="'+r.id+'" value="'+esc(r.label)+'" placeholder="Category">'+
+        '<div class="tally-controls">'+
+          '<button class="tbtn" data-action="dem-dec" data-id="'+r.id+'" aria-label="Decrease">-</button>'+
+          '<span class="tcount">'+r.count+'</span>'+
+          '<button class="tbtn" data-action="dem-inc" data-id="'+r.id+'" aria-label="Increase">+</button>'+
+          '<button class="rm" data-action="dem-remove" data-id="'+r.id+'" aria-label="Remove category">'+ICONS.x+'</button>'+
+        '</div>'+
+      '</div>';
+    }).join("");
+    var chart = rows.map(function(r){
+      var c = parseInt(r.count,10)||0;
+      var pct = Math.round(c/maxc*100);
+      return '<div class="bar-row">'+
+        '<span class="bar-label">'+esc(r.label)+'</span>'+
+        '<span class="bar-track"><span class="bar-fill" style="width:'+pct+'%;background:'+rc+'"></span></span>'+
+        '<span class="bar-val">'+c+'</span>'+
+      '</div>';
+    }).join("");
+    return '<div class="tool-panel" style="--rc:'+rc+'">'+
+      toolHead("Evacuee demographics", rc, "Total "+total)+
+      '<p class="tool-hint">Count evacuees by category. The graph and the generated report update as you go.</p>'+
+      editors+
+      '<div class="row-actions" style="margin-bottom:6px"><button class="btn" data-action="dem-add">Add category</button></div>'+
+      '<div class="bar-chart">'+chart+'</div>'+
+    '</div>';
+  }
+
+  function renderTool(roleKey){
+    var listTools = TOOL_FOR[roleKey];
+    if(!listTools) return '';
+    var r = roleByKey(roleKey);
+    var rc = r ? r.color : "var(--accent)";
+    return listTools.map(function(t){
+      if(t==="tally") return renderTally(rc);
+      if(t==="demographics") return renderDemographics(rc);
+      if(t==="guide") return renderGuide(rc);
+      if(t==="casualty") return renderCasualty(rc);
+      if(t==="sarlog") return renderSarLog(rc);
+      if(t==="timetable") return renderTimetable(rc);
+      if(t==="inventory") return renderInventory(rc);
+      if(t==="hotlines") return renderHotlines(rc);
+      if(t==="plan-ph") return renderPlaceholderTool(rc, "Planning tools", "Placeholder. Situation status, resource status, and the IAP builder will go here.");
+      if(t==="fin-ph") return renderPlaceholderTool(rc, "Admin and finance tools", "Placeholder. Time tracking, cost capture, and claims will go here.");
+      return '';
+    }).join("");
+  }
+
+  /* ---------------- Perceived rating ---------------- */
+  function ratingStats(){
+    var all=[], perC={};
+    state.rating.clusters.forEach(function(c){
+      var vals=[];
+      c.dimensions.forEach(function(d){ if(d.value>0){ vals.push(d.value); all.push(d.value); } });
+      perC[c.id] = vals.length ? (vals.reduce(function(a,b){return a+b;},0)/vals.length) : null;
+    });
+    var overall = all.length ? (all.reduce(function(a,b){return a+b;},0)/all.length) : null;
+    return {perC:perC, overall:overall, count:all.length};
+  }
+  function fmtAvg(x){ return x==null ? "Not yet rated" : (Math.round(x*10)/10)+" / "+state.rating.scaleMax; }
+  function setRating(dimId, val){
+    state.rating.clusters.forEach(function(c){
+      c.dimensions.forEach(function(d){ if(d.id===dimId){ d.value = (d.value===val ? 0 : val); } });
+    });
+  }
+
+  function viewRating(){
+    var st = ratingStats();
+    var max = state.rating.scaleMax;
+    var clusters = state.rating.clusters.map(function(c){
+      var dims = c.dimensions.map(function(d){
+        var scale = "";
+        for(var v=1; v<=max; v++){
+          scale += '<button class="scale-btn'+(d.value===v?" on":"")+'" data-action="rate" data-dim="'+d.id+'" data-value="'+v+'">'+v+'</button>';
+        }
+        return '<div class="dim-row"><div class="dim-label">'+esc(d.label)+'</div><div class="scale">'+scale+'</div></div>';
+      }).join("");
+      var avg = st.perC[c.id];
+      return '<div class="cluster-block">'+
+        '<div class="cluster-h"><b>'+esc(c.name)+'</b><span class="cluster-avg">'+(avg==null?"":fmtAvg(avg))+'</span></div>'+
+        dims+
+      '</div>';
+    }).join("");
+    return ''+
+    '<p class="eyebrow">End of shift</p>'+
+    '<h1>Perceived rating</h1>'+
+    '<p class="muted">How well did the incident management approach work? Rate each item from 1 to '+max+'.</p>'+
+    '<div class="rate-note">Placeholder instrument. The thematic clusters and dimensions will be provided and dropped in here. The scale and layout below show how it will work.</div>'+
+    '<p class="scale-legend">1 = Poor, '+max+' = Excellent</p>'+
+    '<div class="rating-summary card"><b>Overall:</b> '+fmtAvg(st.overall)+'  ('+st.count+' rated)</div>'+
+    clusters+
+    '<div class="card"><div class="field" style="margin-bottom:0"><label for="rate-comment">Overall comments (optional)</label>'+
+      '<textarea id="rate-comment" class="comment" data-rating-comment placeholder="Anything that helped or got in the way">'+esc(state.rating.comment)+'</textarea></div></div>'+
+    '<div class="row-actions">'+
+      '<button class="btn" data-action="go-log">Back to log</button>'+
+      '<button class="btn secondary" data-action="go-roles">Switch role</button>'+
+    '</div>';
+  }
+
+  /* ---------------- Render ---------------- */
+  var lastScreen = null;
+  function render(){
+    var v = document.getElementById("view");
+    var prevY = window.scrollY || window.pageYOffset || 0;
+    var html;
+    if(state.screen==="about") html = viewAbout();
+    else if(state.screen==="roles") html = viewRoles();
+    else if(state.screen==="guide") html = viewGuide();
+    else if(state.screen==="log") html = viewLog();
+    else if(state.screen==="rating") html = viewRating();
+    else html = viewAbout();
+    v.innerHTML = html;
+    // nav current
+    document.querySelectorAll(".nav button").forEach(function(b){
+      var target = b.getAttribute("data-screen");
+      var here = (state.screen==="guide" && target==="roles") ? true : (target===state.screen);
+      b.setAttribute("aria-current", here?"true":"false");
+    });
+    // theme label
+    var lbl = document.querySelector(".theme-label");
+    if(lbl) lbl.textContent = state.theme==="engaging" ? "Engaging" : "Minimal";
+    // modal overlay reflects state
+    var modalEl = document.getElementById("modal");
+    if(modalEl){
+      if(state.modalOpen){ document.getElementById("modal-body").textContent = buildReport(); modalEl.setAttribute("data-open","true"); }
+      else { modalEl.setAttribute("data-open","false"); }
+    }
+    // scroll to top on a real screen change; otherwise keep the reader where they were
+    if(state.screen !== lastScreen){ lastScreen = state.screen; window.scrollTo(0,0); }
+    else { window.scrollTo(0, prevY); }
+  }
+  window.renderATAS = render;
+
+  /* ---------------- Navigation history (device back) ---------------- */
+  var navStack = [];
+  function snapshot(){ return {screen:state.screen, editing:state.editing, aboutEditing:state.aboutEditing, modalOpen:state.modalOpen}; }
+  function restoreLoc(s){ state.screen=s.screen; state.editing=s.editing; state.aboutEditing=s.aboutEditing; state.modalOpen=s.modalOpen; }
+  function advance(mutator){
+    navStack.push(snapshot());
+    mutator();
+    try{ history.pushState({atas:true}, ""); }catch(e){}
+    render();
+  }
+  function goScreen(target){
+    if(state.screen===target && !state.modalOpen){ return; }
+    advance(function(){ state.screen = target; });
+  }
+  function doRevert(){
+    if(!navStack.length) return false;
+    restoreLoc(navStack.pop());
+    render();
+    return true;
+  }
+  function appBack(){ return doRevert(); }
+  function requestBack(){ try{ history.back(); }catch(e){ doRevert(); } }
+  window.atasBack = appBack;
+  window.addEventListener("popstate", appBack);
+
+  /* ---------------- Actions ---------------- */
+  function setTheme(t){
+    state.theme = t;
+    document.documentElement.setAttribute("data-theme", t);
+  }
+
+  function readFormInputs(){
+    var n=document.getElementById("f-name"); if(n) state.responder=n.value;
+    var u=document.getElementById("f-unit"); if(u) state.unit=u.value;
+    var io=document.getElementById("f-inc-other"); if(io) state.incidentOther=io.value;
+    var cu=document.getElementById("f-cu"); if(cu) state.cu=cu.value;
+    var inc=document.getElementById("f-inc"); if(inc) state.incident=inc.value;
+    var rl=document.getElementById("f-role"); if(rl && rl.value){ state.role=rl.value; }
+  }
+
+  function toggleTask(id){
+    var list = currentTasks();
+    for(var k=0;k<list.length;k++){
+      if(list[k].id===id){
+        var t = list[k];
+        if(!t.done){
+          t.done = true; t.ts = nowClock();
+          state.log.push({ts:t.ts, location:state.location, roleKey:state.role, text:t.text, note:"", type:"task"});
+        } else {
+          t.done = false;
+          // remove the most recent matching task log entry
+          for(var j=state.log.length-1;j>=0;j--){
+            if(state.log[j].type==="task" && state.log[j].text===t.text && state.log[j].roleKey===state.role){
+              state.log.splice(j,1); break;
+            }
+          }
+          t.ts = null;
+        }
+        break;
+      }
+    }
+  }
+
+  function addManual(){
+    var inp = document.getElementById("f-manual");
+    if(!inp) return;
+    var val = inp.value.trim();
+    if(!val) return;
+    state.log.push({ts:nowClock(), location:state.location, roleKey:state.role, text:val, note:"", type:"manual"});
+    inp.value="";
+  }
+
+  function locate(){
+    if(!navigator.geolocation){ return; }
+    try{
+      navigator.geolocation.getCurrentPosition(function(pos){
+        var lat=pos.coords.latitude.toFixed(5), lng=pos.coords.longitude.toFixed(5);
+        state.location = lat+", "+lng;
+        render();
+      }, function(){ /* denied or unavailable */ }, {timeout:8000, maximumAge:60000});
+    }catch(e){ /* geolocation may be blocked */ }
+  }
+
+  function addTask(){
+    var inp = document.getElementById("f-newtask");
+    if(!inp) return;
+    var val = inp.value.trim();
+    if(!val) return;
+    customSeq++;
+    currentTasks().push({id:state.role+"-c"+customSeq, text:val, done:false, ts:null, custom:true});
+    inp.value="";
+  }
+
+  function removeTask(id){
+    var list = currentTasks();
+    for(var i=0;i<list.length;i++){
+      if(list[i].id===id){
+        var t = list[i];
+        if(t.done){
+          for(var j=state.log.length-1;j>=0;j--){
+            if(state.log[j].type==="task" && state.log[j].text===t.text && state.log[j].roleKey===state.role){
+              state.log.splice(j,1); break;
+            }
+          }
+        }
+        list.splice(i,1);
+        break;
+      }
+    }
+  }
+
+  function restoreTasks(){
+    for(var j=state.log.length-1;j>=0;j--){
+      if(state.log[j].type==="task" && state.log[j].roleKey===state.role){
+        state.log.splice(j,1);
+      }
+    }
+    state.tasks[state.role] = seedTasksFor(state.role);
+  }
+
+  var MONTHS=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+  function todayLabel(){
+    var d=new Date();
+    return d.getDate()+" "+MONTHS[d.getMonth()]+" "+d.getFullYear();
+  }
+
+  function buildReport(){
+    var entries = state.log.slice().sort(function(a,b){ return a.ts < b.ts ? -1 : (a.ts > b.ts ? 1 : 0); });
+    var roleSet = {};
+    state.log.forEach(function(e){ if(e.roleKey) roleSet[e.roleKey]=true; });
+    var roleNames = Object.keys(roleSet).map(function(k){ var rr=roleByKey(k); return rr?rr.name:k; });
+    if(roleNames.length===0 && state.role){ var cr=roleByKey(state.role); if(cr) roleNames.push(cr.name); }
+    var lines = [];
+    lines.push("GAB.ai LITE TASK LOG REPORT");
+    lines.push("Member:   "+(state.responder||"Unassigned"));
+    var aff = state.cu ? (state.cu + (state.unit ? ", "+state.unit : "")) : "";
+    if(aff){ lines.push("Unit:     "+aff); }
+    var incLabel = state.incident==="Others" ? (state.incidentOther||"Others") : (state.incident||"Not named");
+    lines.push("Incident: "+incLabel);
+    lines.push("Date:     "+todayLabel());
+    lines.push("Role(s):  "+(roleNames.length?roleNames.join(", "):"None selected"));
+    lines.push("Entries:  "+state.log.length);
+    lines.push("");
+    lines.push("TIME    ACTION");
+    if(entries.length===0){
+      lines.push("        No actions logged.");
+    } else {
+      entries.forEach(function(e){
+        var rr = roleByKey(e.roleKey);
+        var rn = rr ? rr.name : "General";
+        lines.push(e.ts+"   "+e.text+(e.location?"  @ "+e.location:"")+"  ["+rn+"]");
+      });
+    }
+    var demRows = state.tools.demographics.filter(function(r){ return (parseInt(r.count,10)||0) > 0; });
+    if(demRows.length){
+      var demMax = demRows.reduce(function(m,r){ return Math.max(m, parseInt(r.count,10)||0); },0) || 1;
+      var demTotal = state.tools.demographics.reduce(function(s,r){ return s+(parseInt(r.count,10)||0); },0);
+      lines.push("");
+      lines.push("EVACUEE DEMOGRAPHICS");
+      demRows.forEach(function(r){
+        var c = parseInt(r.count,10)||0;
+        var barLen = Math.round(c/demMax*20);
+        var bar = ""; for(var i=0;i<barLen;i++){ bar+="#"; }
+        var label = (r.label+"                    ").substring(0,20);
+        var num = ("   "+c).slice(-4);
+        lines.push(label+num+"  "+bar);
+      });
+      lines.push("Total evacuees: "+demTotal);
+    }
+    var rs = ratingStats();
+    if(rs.count>0){
+      lines.push("");
+      lines.push("PERCEIVED RATING (incident management approach)");
+      lines.push("Overall:  "+fmtAvg(rs.overall));
+      state.rating.clusters.forEach(function(c){
+        if(rs.perC[c.id]!=null){ lines.push("  "+c.name+": "+fmtAvg(rs.perC[c.id])); }
+      });
+      if(state.rating.comment){ lines.push("Comment:  "+state.rating.comment); }
+    }
+    return lines.join("\n");
+  }
+  window.buildReport = buildReport;
+
+  function openModal(){ advance(function(){ state.modalOpen = true; }); }
+
+  function flashCopied(){
+    var n=document.getElementById("copy-note");
+    if(!n) return;
+    n.style.opacity="1";
+    setTimeout(function(){ if(n){ n.style.opacity="0"; } }, 1200);
+  }
+  function copyReport(){
+    var txt = buildReport();
+    try{
+      if(navigator.clipboard && navigator.clipboard.writeText){ navigator.clipboard.writeText(txt); }
+      flashCopied();
+    }catch(e){ /* clipboard may be blocked in some contexts */ }
+  }
+  function downloadReport(){
+    try{
+      var txt = buildReport();
+      var blob = new Blob([txt], {type:"text/plain"});
+      var url = URL.createObjectURL(blob);
+      var a = document.createElement("a");
+      var who = (state.responder||"member").replace(/[^A-Za-z0-9]+/g,"_");
+      a.href = url; a.download = "GABai_Lite_task_log_"+who+".txt";
+      document.body.appendChild(a); a.click(); document.body.removeChild(a);
+      setTimeout(function(){ URL.revokeObjectURL(url); }, 0);
+    }catch(e){ /* download may be blocked in some contexts */ }
+  }
+
+  /* ---------------- Event delegation ---------------- */
+  function handle(action, el){
+    switch(action){
+      case "home": goScreen("about"); break;
+      case "enter": goScreen("roles"); break;
+      case "about-edit": state.aboutDraft = Object.assign({}, state.about); state.aboutEditing=true; render(); break;
+      case "about-save": Object.assign(state.about, state.aboutDraft); saveAbout(); state.aboutEditing=false; render(); break;
+      case "about-cancel": state.aboutEditing=false; render(); break;
+      case "go-roles": readFormInputs(); goScreen("roles"); break;
+      case "pick-role":
+        readFormInputs();
+        state.role = el.getAttribute("data-role");
+        state.editing=false;
+        goScreen("guide"); break;
+      case "proceed-role":
+        if(state.role){ readFormInputs(); state.editing=false; goScreen("guide"); }
+        break;
+      case "toggle-task": toggleTask(el.getAttribute("data-id")); render(); break;
+      case "toggle-edit": state.editing=!state.editing; render(); break;
+      case "add-task": addTask(); render(); var af=document.getElementById("f-newtask"); if(af) af.focus(); break;
+      case "remove-task": removeTask(el.getAttribute("data-id")); render(); break;
+      case "restore-tasks": restoreTasks(); render(); break;
+      case "tally-inc": tallyStep(el.getAttribute("data-id"),1); render(); break;
+      case "dem-inc": demStep(el.getAttribute("data-id"),1); render(); break;
+      case "dem-dec": demStep(el.getAttribute("data-id"),-1); render(); break;
+      case "dem-add": demAdd(); render(); break;
+      case "dem-remove": removeToolRow("demographics",el.getAttribute("data-id")); render(); break;
+      case "tally-dec": tallyStep(el.getAttribute("data-id"),-1); render(); break;
+      case "tally-add": tallyAdd(); render(); break;
+      case "tally-reset": tallyReset(); render(); break;
+      case "tally-remove": removeToolRow("tally",el.getAttribute("data-id")); render(); break;
+      case "tt-add": ttAdd(); render(); break;
+      case "tt-remove": removeToolRow("timetable",el.getAttribute("data-id")); render(); break;
+      case "inv-add": invAdd(); render(); break;
+      case "inv-remove": removeToolRow("inventory",el.getAttribute("data-id")); render(); break;
+      case "hot-add": hotAdd(); render(); break;
+      case "hot-remove": removeToolRow("hotlines",el.getAttribute("data-id")); render(); break;
+      case "cas-add": casAdd(); render(); break;
+      case "cas-remove": removeToolRow("casualty",el.getAttribute("data-id")); render(); break;
+      case "sar-add": sarAdd(); render(); break;
+      case "sar-remove": removeToolRow("sarlog",el.getAttribute("data-id")); render(); break;
+      case "go-rating": goScreen("rating"); break;
+      case "rate": setRating(el.getAttribute("data-dim"), parseInt(el.getAttribute("data-value"),10)); render(); break;
+      case "go-log": goScreen("log"); break;
+      case "add-manual": addManual(); render(); break;
+      case "locate": locate(); break;
+      case "back-guide": goScreen("guide"); break;
+      case "export": openModal(); break;
+      case "copy-report": copyReport(); break;
+      case "download-report": downloadReport(); break;
+      case "close-modal": requestBack(); break;
+      case "theme": setTheme(state.theme==="engaging"?"minimal":"engaging"); render(); break;
+    }
+  }
+
+  document.addEventListener("click", function(ev){
+    var el = ev.target.closest("[data-action]");
+    if(!el) return;
+    handle(el.getAttribute("data-action"), el);
+  });
+  document.addEventListener("dblclick", function(ev){
+    var el = ev.target.closest("[data-dblaction='toggle-task']");
+    if(!el) return;
+    toggleTask(el.getAttribute("data-id")); render();
+  });
+
+  function toolFieldHandler(ev){
+    var el = ev.target;
+    if(!el || !el.getAttribute) return;
+    var isSelect = el.tagName === "SELECT";
+    if(isSelect && ev.type !== "change") return;
+    if(el.hasAttribute("data-rating-comment")){ state.rating.comment = el.value; return; }
+    if(el.hasAttribute("data-about-field")){ state.aboutDraft[el.getAttribute("data-about-field")] = el.value; return; }
+    if(el.hasAttribute("data-field")){ state[el.getAttribute("data-field")] = el.value; return; }
+    if(el.hasAttribute("data-form-select")){
+      var which = el.getAttribute("data-form-select");
+      if(which==="cu"){ state.cu = el.value; if(!state.cu){ state.unit=""; } render(); return; }
+      if(which==="incident"){ state.incident = el.value; if(state.incident!=="Others"){ state.incidentOther=""; } render(); return; }
+      if(which==="role"){ readFormInputs(); state.role = el.value || null; render(); return; }
+      return;
+    }
+    var field = el.getAttribute("data-tool-field");
+    if(!field) return;
+    var row = findToolRow(el.getAttribute("data-tool"), el.getAttribute("data-id"));
+    if(row){ row[field] = el.value; if(isSelect){ render(); } }
+  }
+  document.addEventListener("input", toolFieldHandler);
+  document.addEventListener("change", toolFieldHandler);
+  document.addEventListener("keydown", function(ev){
+    if((ev.key==="Enter"||ev.key===" ") && ev.target && ev.target.classList && ev.target.classList.contains("wordmark")){
+      ev.preventDefault(); handle("home", ev.target);
+    }
+    if(ev.key==="Escape" && state.modalOpen){ requestBack(); }
+  });
+
+  try{ history.replaceState({atas:true, root:true}, ""); }catch(e){}
+  loadAbout();
+  setTheme(state.theme);
+  render();
+})();
+</script>
+</body>
+</html>
